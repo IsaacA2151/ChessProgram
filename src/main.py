@@ -8,8 +8,8 @@ SCREEN_HEIGHT = 900
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Images
-black_bishop = pygame.transform.scale(pygame.image.load("Sprites/bishop-b.svg"), (250,250))
-chess_board = pygame.transform.scale(pygame.image.load("Sprites/chess-board.png"), (0.8*SCREEN_WIDTH, 0.8*SCREEN_HEIGHT))
+black_bishop = pygame.image.load("src/Sprites/bishop-b.png")
+chess_board = pygame.image.load("src/Sprites/chess-board.png")
 
 running = 1
 
@@ -19,7 +19,7 @@ while running:
       running = 0
 
 
-  screen.fill((120, 120, 120))
+  screen.fill((100, 100, 100))
   screen.blit(chess_board, (100, 100))
   screen.blit(black_bishop, (100, 100))
   pygame.display.flip()
