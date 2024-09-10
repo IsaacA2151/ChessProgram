@@ -41,6 +41,9 @@ class Piece:
         self.initName()
         self.sprite = spriteFiles[self.spriteName]
 
+    def getSpriteFn(self):
+        return self.sprite
+
 
 class Pawn(Piece):
     def __init__(self, player, coord):
