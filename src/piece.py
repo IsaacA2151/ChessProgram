@@ -52,7 +52,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self,player, coord):
         super().__init__(player, coord)
-        self.pieceName = "pawn"
+        self.pieceName = "knight"
         self.setSprite()
 
 
@@ -60,7 +60,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, player, coord):
         super().__init__(player, coord)
-        self.pieceName = "pawn"
+        self.pieceName = "bishop"
         self.setSprite()
 
 
@@ -68,7 +68,7 @@ class Bishop(Piece):
 class Rook(Piece):
     def __init__(self, player, coord):
         super().__init__(player, coord)
-        self.pieceName = "pawn"
+        self.pieceName = "rook"
         self.setSprite()
 
 
@@ -76,7 +76,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, player, coord):
         super().__init__(player, coord)
-        self.pieceName = "pawn"
+        self.pieceName = "queen"
         self.setSprite()
 
 
@@ -84,7 +84,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, player, coord):
         super().__init__(player, coord)
-        self.pieceName = "pawn"
+        self.pieceName = "king"
         self.setSprite()
 
         
