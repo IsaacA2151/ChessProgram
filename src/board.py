@@ -4,8 +4,6 @@ class Board:
     def __init__(self, size=8):
         self.size = size
         self.board = []
-        self.cellSize = 90
-        self.cornerOffset = 90
 
     def addPiece(self, player, pieceName, coord):
         if pieceName == "pawn":
@@ -28,5 +26,8 @@ class Board:
         self.board = [[[] for k in range(self.size)] for i in range(self.size)]
 
         for i in range(self.size):
-            xCord = i * (self.cellSize) + self.cornerOffset
+            self.addPiece(1, "pawn", [i,1])
+            self.addPiece(-1, "pawn", [i,6])
+
+
             
