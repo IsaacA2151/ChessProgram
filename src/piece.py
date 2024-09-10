@@ -31,7 +31,7 @@ class Piece:
             self.colour = "B"
     
 
-    def checkMove(self, destination):
+    def getAllMoves(self):
         pass
 
     def initName(self):
@@ -50,6 +50,11 @@ class Pawn(Piece):
         super().__init__(player, coord)
         self.pieceName = "pawn"
         self.setSprite()
+        self.x, self.y = self.coord[1], self.coord[0]
+
+    def getAllMoves(self):
+        moves = [[self.x-self.player, self.y+self.player], [self.x, self.y+self.player], [self.x+self.player, self.y+self.player]]
+        return moves
 
 
 class Knight(Piece):
