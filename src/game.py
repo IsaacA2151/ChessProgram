@@ -5,14 +5,14 @@ import board
 
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 900
-LIGHT_GREY = (200, 200, 200)
+LIGHT_GREY = (100,100,100)
 DARK_GREY = (40, 40, 40)
 TIMER_WIDTH = 100
 TIMER_HEIGHT = 50
 CHESS_BOARD_SPRITE = pygame.image.load("Sprites/chess-board.png")
 sc = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-class GameUI:
+class Game:
 
     def __init__(self, screen):
         self.cornerRenderOffset = 90
@@ -36,11 +36,9 @@ class GameUI:
         return (self.cornerRenderOffset * gridX) + (self.cellSize / 2) +  self.cornerRenderOffset, (self.cornerRenderOffset * gridY) + (self.cellSize / 2) +  self.cornerRenderOffset
 
     def showMoves(self):
-        print('showing')
         for move in self.currentlyShowing:
-            boardX, boardY = self.getCellCentre(move[0], move[1])
-            print(boardX, boardY)
-            pygame.draw.circle(self.screen, DARK_GREY, (boardX, boardY), 30)
+            boardX, boardY = self.getCellCentre(move[1], move[0])
+            pygame.draw.circle(self.screen, LIGHT_GREY, (boardX, boardY), self.cellSize*0.25)
 
 
     def handleClick(self, mouseX, mouseY, turn):
@@ -49,8 +47,12 @@ class GameUI:
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
             if self.board.isOccupied(gridY, gridX):
                 currentPiece = self.board.getCell(gridY, gridX)
+                print(gridY, gridX)
 
-                possibleMoves = currentPiece.getAllMoves()
+                possibleMoves = currentPiece.getAllMoves(self.board)
+
+                
+
                 self.showingMoves = True
                 self.currentlyShowing = possibleMoves
 
@@ -80,7 +82,7 @@ pygame.init()
 running = 1
 turn = -1
 
-g = GameUI(sc)
+g = Game(sc)
 
 while running:
     for event in pygame.event.get():

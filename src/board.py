@@ -27,14 +27,25 @@ class Board:
     def isOccupied(self, y, x):
         return self.getCell(y,x) != []
     
+    def isWithinBounds(self, y, x):
+        if x > -1 and y > -1 and x < 8 and y < 8:
+            return True
+        else:
+            return False
+    
 
     def makeStandardBoard(self):
         self.size = 8
         self.grid = [[[] for k in range(self.size)] for i in range(self.size)]
 
+        self.addPiece(-1, "queen", [3,4])
+
         for i in range(self.size):
             self.addPiece(1, "pawn", [1,i])
             self.addPiece(-1, "pawn", [6,i])
+
+        self.addPiece(1, "pawn", [5,3])
+        self.addPiece(1, "pawn", [5,6])
 
         self.addPiece(1,"rook", [0,0])
         self.addPiece(1,"rook", [0,7])
@@ -45,6 +56,7 @@ class Board:
         self.addPiece(1, "knight", [0,6])
         self.addPiece(-1, "knight", [7,1])
         self.addPiece(-1, "knight", [7,6])
+        
 
         self.addPiece(1, "bishop", [0,2])
         self.addPiece(1, "bishop", [0,5])
