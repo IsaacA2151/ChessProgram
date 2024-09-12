@@ -56,6 +56,10 @@ class Game:
                 self.showingMoves = True
                 self.currentlyShowing = possibleMoves
 
+        if self.showingMoves:
+            if [gridY, gridX] in self.currentlyShowing:
+                
+
 
 
 
