@@ -72,9 +72,9 @@ class Pawn(Piece):
         self.pieceName = "pawn"
         self.hasMoved = False
         self.setSprite()
-        self.x, self.y = self.coord[1], self.coord[0]
 
     def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]
         moves = []
         leftDiag, rightDiag = [self.y+self.player, self.x-1], [self.y+self.player, self.x+1]
         oneForward, twoForward = [self.y+self.player, self.x], [self.y + (self.player * 2), self.x]
@@ -102,9 +102,9 @@ class Knight(Piece):
         super().__init__(player, coord)
         self.pieceName = "knight"
         self.setSprite()
-        self.x, self.y = self.coord[1], self.coord[0]
 
     def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]
         possibleMoves = [[self.y+1, self.x-2], [self.y-1, self.x-2], [self.y+2, self.x-1], [self.y+2, self.x+1], [self.y-2, self.x-1], [self.y-2, self.x+1], [self.y+1, self.x+2], [self.y-1, self.x+2]]
         moves = self.getValidMoves(possibleMoves, board)
 
@@ -118,9 +118,9 @@ class Bishop(Piece):
         super().__init__(player, coord)
         self.pieceName = "bishop"
         self.setSprite()
-        self.x, self.y = self.coord[1], self.coord[0]
 
     def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]
         moves = []
 
         # [y, x]
@@ -149,9 +149,9 @@ class Rook(Piece):
         super().__init__(player, coord)
         self.pieceName = "rook"
         self.setSprite()
-        self.x, self.y = self.coord[1], self.coord[0]
 
     def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]
         moves = []
 
         directions = [[-1,0], [1,0], [0,1], [0,-1]]
@@ -179,9 +179,9 @@ class Queen(Piece):
         super().__init__(player, coord)
         self.pieceName = "queen"
         self.setSprite()
-        self.x, self.y = self.coord[1], self.coord[0]
 
     def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]
         moves = []
 
         directions =[[-1,0], [1,0], [0,1], [0,-1], [-1, 1], [1,1], [1,-1], [-1,-1]]
@@ -208,9 +208,9 @@ class King(Piece):
         super().__init__(player, coord)
         self.pieceName = "king"
         self.setSprite()
-        self.y, self.x = coord[0], coord[1]
 
-    def getAllMoves(self, board):#
+    def getAllMoves(self, board):
+        self.x, self.y = self.coord[1], self.coord[0]   
         possibleMoves = []
         for i in range(-1,2,1):
             for k in range(-1,2,1):

@@ -21,6 +21,18 @@ class Board:
 
         self.grid[coord[0]][coord[1]] = newPiece
 
+    def movePiece(self, selectedPiece, destination):
+        pieceY, pieceX = selectedPiece.coord[0], selectedPiece.coord[1]
+        destinationY, destinationX = destination[0], destination[1]
+
+        selectedPiece.coord = destination
+        self.grid[destinationY][destinationX] = selectedPiece
+        self.grid[pieceY][pieceX] = []
+
+        if selectedPiece.pieceName == "pawn":
+            selectedPiece.hasMoved = True
+
+
     def getCell(self, y, x):
         return self.grid[y][x]
     
@@ -38,14 +50,10 @@ class Board:
         self.size = 8
         self.grid = [[[] for k in range(self.size)] for i in range(self.size)]
 
-        self.addPiece(-1, "queen", [3,4])
 
         for i in range(self.size):
             self.addPiece(1, "pawn", [1,i])
             self.addPiece(-1, "pawn", [6,i])
-
-        self.addPiece(1, "pawn", [5,3])
-        self.addPiece(1, "pawn", [5,6])
 
         self.addPiece(1,"rook", [0,0])
         self.addPiece(1,"rook", [0,7])
@@ -68,3 +76,7 @@ class Board:
 
         self.addPiece(1, "king", [0,4])
         self.addPiece(-1, "king", [7,4])
+
+    def printGrid(self):
+        for i in self.grid:
+            print(i)

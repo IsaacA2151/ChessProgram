@@ -25,6 +25,8 @@ class Game:
 
         self.board = board.Board()
         self.board.makeStandardBoard()
+
+        self.currentPiece = None
         
     def getScreenPos(self, gridX, gridY):
         return (self.cellSize * gridX) + self.cornerRenderOffset, (self.cellSize * gridY) + self.cornerRenderOffset
@@ -45,20 +47,24 @@ class Game:
         gridX, gridY = self.getGridPos(mouseX, mouseY)
         
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
-            if self.board.isOccupied(gridY, gridX):
-                currentPiece = self.board.getCell(gridY, gridX)
-                print(gridY, gridX)
+            
+            if self.showingMoves and [gridY, gridX] in self.currentlyShowing:
+                self.board.movePiece(self.currentPiece, [gridY, gridX])
+                self.showingMoves = False
 
-                possibleMoves = currentPiece.getAllMoves(self.board)
+            else:
+                if self.board.isOccupied(gridY, gridX):
+                    self.currentPiece = self.board.getCell(gridY, gridX)
+                    print(self.currentPiece.coord)
+                    possibleMoves = self.currentPiece.getAllMoves(self.board)
+                    
 
-                
+                    
 
-                self.showingMoves = True
-                self.currentlyShowing = possibleMoves
+                    self.showingMoves = True
+                    self.currentlyShowing = possibleMoves
 
-        if self.showingMoves:
-            if [gridY, gridX] in self.currentlyShowing:
-                
+
 
 
 
