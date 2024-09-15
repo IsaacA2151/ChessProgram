@@ -5,14 +5,14 @@ import board
 
 SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 900
-LIGHT_GREY = (200, 200, 200)
+LIGHT_GREY = (100,100,100)
 DARK_GREY = (40, 40, 40)
 TIMER_WIDTH = 100
 TIMER_HEIGHT = 50
 CHESS_BOARD_SPRITE = pygame.image.load("Sprites/chess-board.png")
 sc = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-class GameUI:
+class Game:
 
     def __init__(self, screen):
         self.cornerRenderOffset = 90
@@ -25,6 +25,8 @@ class GameUI:
 
         self.board = board.Board()
         self.board.makeStandardBoard()
+
+        self.currentPiece = None
         
     def getScreenPos(self, gridX, gridY):
         return (self.cellSize * gridX) + self.cornerRenderOffset, (self.cellSize * gridY) + self.cornerRenderOffset
@@ -35,24 +37,76 @@ class GameUI:
     def getCellCentre(self, gridX, gridY):
         return (self.cornerRenderOffset * gridX) + (self.cellSize / 2) +  self.cornerRenderOffset, (self.cornerRenderOffset * gridY) + (self.cellSize / 2) +  self.cornerRenderOffset
 
+    def wouldBeInCheck(self, move, piece, player):
+        return False
+
+    def isInCheck(self, player):
+        # index 0 is whites moves, 1 is black
+        allPlayerMoves = [[],[]]
+
+        for row in self.board.grid:
+            for piece in row:
+                if piece != []:
+                    if piece.pieceName != "king":
+                        moves = piece.getAllMoves(self.board)
+
+                        if piece.player == -1:
+                            index = 0
+                        else:
+                            index = 1
+
+                        for i in moves:
+                            allPlayerMoves[index].append(i)
+
+        whiteKingCoord = self.board.getKingCoord(-1)
+        blackKingCoord = self.board.getKingCoord(1)
+        print(allPlayerMoves[0])
+        print("\n\n\n")
+        print(blackKingCoord)
+
+        if player == -1 and whiteKingCoord in allPlayerMoves[1]:
+            return True
+        elif player == 1 and blackKingCoord in allPlayerMoves[0]:
+            return True
+        else:
+            return False
+
     def showMoves(self):
-        print('showing')
         for move in self.currentlyShowing:
-            boardX, boardY = self.getCellCentre(move[0], move[1])
-            print(boardX, boardY)
-            pygame.draw.circle(self.screen, DARK_GREY, (boardX, boardY), 30)
+            boardX, boardY = self.getCellCentre(move[1], move[0])
+            pygame.draw.circle(self.screen, LIGHT_GREY, (boardX, boardY), self.cellSize*0.25)
+
+    def findPossibleMoves(self, piece):
+        moves = []
+        possibleMoves = piece.getAllMoves(self.board)
+        for move in possibleMoves:
+            if not self.wouldBeInCheck(move, piece, -1):
+                moves.append(move)
+
+        return moves
 
 
     def handleClick(self, mouseX, mouseY, turn):
         gridX, gridY = self.getGridPos(mouseX, mouseY)
         
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
-            if self.board.isOccupied(gridY, gridX):
-                currentPiece = self.board.getCell(gridY, gridX)
+            
+            if gridX == 0 and gridY == 0:
+                self.board.undoMove()
 
-                possibleMoves = currentPiece.getAllMoves()
-                self.showingMoves = True
-                self.currentlyShowing = possibleMoves
+            elif self.showingMoves and [gridY, gridX] in self.currentlyShowing:
+                self.board.movePiece(self.currentPiece, [gridY, gridX])
+                self.showingMoves = False
+
+            else:
+                if self.board.isOccupied(gridY, gridX):
+                    self.currentPiece = self.board.getCell(gridY, gridX)
+                    possibleMoves = self.findPossibleMoves(self.currentPiece)                    
+
+                    self.showingMoves = True
+                    self.currentlyShowing = possibleMoves
+
+
 
 
 
@@ -80,7 +134,7 @@ pygame.init()
 running = 1
 turn = -1
 
-g = GameUI(sc)
+g = Game(sc)
 
 while running:
     for event in pygame.event.get():
