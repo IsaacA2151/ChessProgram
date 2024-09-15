@@ -17,9 +17,7 @@ class Game:
     def __init__(self, screen):
         self.cornerRenderOffset = 90
         self.cellSize = 90 
-
         self.screen = screen
-
         self.showingMoves = False
         self.currentlyShowing = None
 
@@ -85,8 +83,14 @@ class Game:
 
         return moves
 
+    def switchPlayer(self, player):
+        if player == -1:
+            player = 1
+        elif player == 1:
+            player = -1
+        return player
 
-    def handleClick(self, mouseX, mouseY, turn):
+    def handleClick(self, mouseX, mouseY, player, swap):
         gridX, gridY = self.getGridPos(mouseX, mouseY)
         
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
@@ -97,14 +101,17 @@ class Game:
             elif self.showingMoves and [gridY, gridX] in self.currentlyShowing:
                 self.board.movePiece(self.currentPiece, [gridY, gridX])
                 self.showingMoves = False
+                swap = True
+                return swap
 
             else:
                 if self.board.isOccupied(gridY, gridX):
                     self.currentPiece = self.board.getCell(gridY, gridX)
-                    possibleMoves = self.findPossibleMoves(self.currentPiece)                    
+                    if self.currentPiece.colour == "W" and player == -1 or self.currentPiece.colour == "B" and player == 1:
+                        possibleMoves = self.findPossibleMoves(self.currentPiece)                    
+                        self.showingMoves = True
+                        self.currentlyShowing = possibleMoves
 
-                    self.showingMoves = True
-                    self.currentlyShowing = possibleMoves
 
 
 
@@ -132,7 +139,8 @@ class Game:
 pygame.init()
 
 running = 1
-turn = -1
+player = -1
+swap = False
 
 g = Game(sc)
 
@@ -143,8 +151,9 @@ while running:
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = pygame.mouse.get_pos()
-            g.handleClick(mouseX, mouseY, turn)
-
+            swap = g.handleClick(mouseX, mouseY, player, swap)
+            if swap:
+                player = g.switchPlayer(player)
     g.renderBoard()
 
 
