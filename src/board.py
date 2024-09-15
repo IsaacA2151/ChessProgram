@@ -4,6 +4,9 @@ class Board:
     def __init__(self, size=8):
         self.size = size
         self.grid = []
+        self.undoCoord = []
+        self.justTakenPiece = None
+        self.justMovedPiece = None
 
     def addPiece(self, player, pieceName, coord):
         if pieceName == "pawn":
@@ -21,16 +24,40 @@ class Board:
 
         self.grid[coord[0]][coord[1]] = newPiece
 
+    def undoMove(self):
+        self.movePiece(self.justMovedPiece, self.undoCoord)
+
+        if self.justTakenPiece != None:
+            takenPieceCoord = self.justTakenPiece.coord
+            self.grid[takenPieceCoord[0]][takenPieceCoord[1]] = self.justTakenPiece
+        if self.justMovedPiece.pieceName == "pawn":
+            self.justMovedPiece.numMoves = self.justMovedPiece.numMoves - 1
+            print(self.justMovedPiece.numMoves, self.justMovedPiece.numMoves - 1)
+
     def movePiece(self, selectedPiece, destination):
         pieceY, pieceX = selectedPiece.coord[0], selectedPiece.coord[1]
         destinationY, destinationX = destination[0], destination[1]
+
+        if self.isOccupied(destinationY, destinationX):
+            self.justTakenPiece = self.getCell(destinationY, destinationX)
+        else:
+            self.justTakenPiece = None
+        self.undoCoord = [pieceY, pieceX]
+        self.justMovedPiece = selectedPiece
 
         selectedPiece.coord = destination
         self.grid[destinationY][destinationX] = selectedPiece
         self.grid[pieceY][pieceX] = []
 
         if selectedPiece.pieceName == "pawn":
-            selectedPiece.hasMoved = True
+            selectedPiece.numMoves += 1
+
+    def getKingCoord(self, player):
+        for row in self.grid:
+            for piece in row:
+                if piece != []:
+                    if piece.player == player and piece.pieceName == "king":
+                        return piece.coord
 
 
     def getCell(self, y, x):

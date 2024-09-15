@@ -72,6 +72,7 @@ class Pawn(Piece):
         self.pieceName = "pawn"
         self.hasMoved = False
         self.setSprite()
+        self.numMoves = 0
 
     def getAllMoves(self, board):
         self.x, self.y = self.coord[1], self.coord[0]
@@ -91,7 +92,7 @@ class Pawn(Piece):
         if board.isWithinBounds(oneForward[0], oneForward[1]) and board.isOccupied(oneForward[0], oneForward[1]) == False:
             moves.append(oneForward)
 
-        if self.hasMoved == False and board.isOccupied(twoForward[0], twoForward[1]) == False and board.isOccupied(oneForward[0], oneForward[1]) == False:
+        if self.numMoves == 0 and board.isOccupied(twoForward[0], twoForward[1]) == False and board.isOccupied(oneForward[0], oneForward[1]) == False:
             moves.append(twoForward)
 
         return moves

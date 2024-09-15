@@ -37,10 +37,53 @@ class Game:
     def getCellCentre(self, gridX, gridY):
         return (self.cornerRenderOffset * gridX) + (self.cellSize / 2) +  self.cornerRenderOffset, (self.cornerRenderOffset * gridY) + (self.cellSize / 2) +  self.cornerRenderOffset
 
+    def wouldBeInCheck(self, move, piece, player):
+        return False
+
+    def isInCheck(self, player):
+        # index 0 is whites moves, 1 is black
+        allPlayerMoves = [[],[]]
+
+        for row in self.board.grid:
+            for piece in row:
+                if piece != []:
+                    if piece.pieceName != "king":
+                        moves = piece.getAllMoves(self.board)
+
+                        if piece.player == -1:
+                            index = 0
+                        else:
+                            index = 1
+
+                        for i in moves:
+                            allPlayerMoves[index].append(i)
+
+        whiteKingCoord = self.board.getKingCoord(-1)
+        blackKingCoord = self.board.getKingCoord(1)
+        print(allPlayerMoves[0])
+        print("\n\n\n")
+        print(blackKingCoord)
+
+        if player == -1 and whiteKingCoord in allPlayerMoves[1]:
+            return True
+        elif player == 1 and blackKingCoord in allPlayerMoves[0]:
+            return True
+        else:
+            return False
+
     def showMoves(self):
         for move in self.currentlyShowing:
             boardX, boardY = self.getCellCentre(move[1], move[0])
             pygame.draw.circle(self.screen, LIGHT_GREY, (boardX, boardY), self.cellSize*0.25)
+
+    def findPossibleMoves(self, piece):
+        moves = []
+        possibleMoves = piece.getAllMoves(self.board)
+        for move in possibleMoves:
+            if not self.wouldBeInCheck(move, piece, -1):
+                moves.append(move)
+
+        return moves
 
 
     def handleClick(self, mouseX, mouseY, turn):
@@ -48,18 +91,17 @@ class Game:
         
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
             
-            if self.showingMoves and [gridY, gridX] in self.currentlyShowing:
+            if gridX == 0 and gridY == 0:
+                self.board.undoMove()
+
+            elif self.showingMoves and [gridY, gridX] in self.currentlyShowing:
                 self.board.movePiece(self.currentPiece, [gridY, gridX])
                 self.showingMoves = False
 
             else:
                 if self.board.isOccupied(gridY, gridX):
                     self.currentPiece = self.board.getCell(gridY, gridX)
-                    print(self.currentPiece.coord)
-                    possibleMoves = self.currentPiece.getAllMoves(self.board)
-                    
-
-                    
+                    possibleMoves = self.findPossibleMoves(self.currentPiece)                    
 
                     self.showingMoves = True
                     self.currentlyShowing = possibleMoves
