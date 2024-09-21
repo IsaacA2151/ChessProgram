@@ -107,3 +107,6 @@ class Board:
     def printGrid(self):
         for i in self.grid:
             print(i)
+    
+    
+        

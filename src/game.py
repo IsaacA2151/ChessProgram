@@ -58,9 +58,9 @@ class Game:
 
         whiteKingCoord = self.board.getKingCoord(-1)
         blackKingCoord = self.board.getKingCoord(1)
-        print(allPlayerMoves[0])
-        print("\n\n\n")
-        print(blackKingCoord)
+        #print(allPlayerMoves[0])
+        #print("\n\n\n")
+        #print(blackKingCoord)
 
         if player == -1 and whiteKingCoord in allPlayerMoves[1]:
             return True
@@ -78,8 +78,7 @@ class Game:
         moves = []
         possibleMoves = piece.getAllMoves(self.board)
         for move in possibleMoves:
-            if not self.wouldBeInCheck(move, piece, -1):
-                moves.append(move)
+            moves.append(move)
 
         return moves
 
@@ -90,7 +89,7 @@ class Game:
             player = -1
         return player
 
-    def handleClick(self, mouseX, mouseY, player, swap):
+    def handleClick(self, mouseX, mouseY, player, swap, check):
         gridX, gridY = self.getGridPos(mouseX, mouseY)
         
         if gridX > -1 and gridX < 8 and gridY > -1 and gridY < 8:
@@ -102,7 +101,31 @@ class Game:
                 self.board.movePiece(self.currentPiece, [gridY, gridX])
                 self.showingMoves = False
                 swap = True
-                return swap
+                whiteMoves = []
+                blackMoves = []
+                for row in self.board.grid:
+                    for piece in row:
+                        if piece != []:
+                            if piece.player == -1:
+                                whiteMoves.append(piece.getValidMoves(self.findPossibleMoves(piece), self.board))
+                            elif piece.player == 1:
+                                blackMoves.append(piece.getValidMoves(self.findPossibleMoves(piece), self.board))
+                #print (self.board.getKingCoord(-1))
+                #print(blackMoves)
+                changeCheck = False
+                for piecesMoves in blackMoves:
+                    for move in piecesMoves:
+                        if self.board.getKingCoord(-1) == move: # White King Coord
+                            changeCheck = True
+                for pieceMoves in whiteMoves:
+                    for move in piecesMoves:
+                        if self.board.getKingCoord(1) == move: # Black King Coord
+                            changeCheck = True
+                if changeCheck == True:
+                    check = True
+                else:
+                    check = False
+                return [swap, check]
 
             else:
                 if self.board.isOccupied(gridY, gridX):
@@ -111,6 +134,7 @@ class Game:
                         possibleMoves = self.findPossibleMoves(self.currentPiece)                    
                         self.showingMoves = True
                         self.currentlyShowing = possibleMoves
+        return [swap, check]
 
 
 
@@ -141,6 +165,7 @@ pygame.init()
 running = 1
 player = -1
 swap = False
+check = False
 
 g = Game(sc)
 
@@ -151,11 +176,14 @@ while running:
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = pygame.mouse.get_pos()
-            swap = g.handleClick(mouseX, mouseY, player, swap)
+            ff = g.handleClick(mouseX, mouseY, player, swap, check)
+            swap = ff[0]
+            check = ff[1]
+            print(check)
             if swap:
                 player = g.switchPlayer(player)
+            
+        
     g.renderBoard()
 
-
-  
  
